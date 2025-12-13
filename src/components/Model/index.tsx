@@ -1,9 +1,12 @@
 import { type FC, useState, useEffect } from "react";
 import {
   DataTexture,
+  Mesh,
+  MeshBasicMaterial,
   MeshToonMaterial,
   NearestFilter,
   NoColorSpace,
+  BackSide,
   type Material,
 } from "three";
 import { GLTFLoader, type GLTF } from "three/examples/jsm/Addons.js";
@@ -74,6 +77,12 @@ function toToonMaterial(src: Material, isSkinned: boolean) {
   return toon;
 }
 
+// アウトライン用の黒マテリアル（全Meshで共有）
+const OUTLINE_MATERIAL = new MeshBasicMaterial({
+  color: 0x000000,
+  side: BackSide,
+});
+
 const Model: FC = () => {
   const [gltf, setGltf] = useState<GLTF | null>(null);
   useEffect(() => {
@@ -90,15 +99,37 @@ const Model: FC = () => {
           material?: Material | Material[];
           castShadow?: boolean;
           receiveShadow?: boolean;
+          geometry?: unknown;
+          parent?: { add: (child: unknown) => void } | null;
         };
-        if (!mesh.isMesh || !mesh.material) return;
+        if (!mesh.isMesh || !mesh.material || !mesh.geometry) return;
 
+        // 元のマテリアルをToonMaterialに変換
         mesh.material = Array.isArray(mesh.material)
           ? mesh.material.map((m) => toToonMaterial(m, !!mesh.isSkinnedMesh))
           : toToonMaterial(mesh.material, !!mesh.isSkinnedMesh);
 
         mesh.castShadow = true;
         mesh.receiveShadow = true;
+
+        // SkinnedMeshの場合はアウトライン処理をスキップ（複雑なため）
+        if (mesh.isSkinnedMesh) return;
+
+        // アウトライン用のMeshを複製
+        // 同じgeometryを使い、黒のBackSideマテリアルで裏面描画、少し拡大
+        const outlineMesh = new Mesh(mesh.geometry as never, OUTLINE_MATERIAL);
+        // 元のMeshのtransformをコピーしてから、scaleだけ1.01倍に拡大
+        outlineMesh.position.copy((mesh as Mesh).position);
+        outlineMesh.rotation.copy((mesh as Mesh).rotation);
+        outlineMesh.scale.copy((mesh as Mesh).scale);
+        outlineMesh.scale.multiplyScalar(1.01); // 元のscaleに1.01を掛ける
+        // アウトラインを先に描画するようにrenderOrderを設定
+        outlineMesh.renderOrder = -1;
+
+        // 元のMeshの親に追加（同じtransformが適用される）
+        if (mesh.parent) {
+          mesh.parent.add(outlineMesh);
+        }
       });
 
       setGltf(loadedGltf);
