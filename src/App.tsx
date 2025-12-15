@@ -2,16 +2,11 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import Model from "./components/Model/index";
 import { Suspense } from "react";
-import { useControls } from 'leva';
+import { useControls } from "leva";
+import { DIRECTIONAL_LIGHT_POSITION } from "./const/DirectionalLight/params";
 
 function App() {
-
-  const { lightX, lightY, lightZ } = useControls('Light Position', {
-    lightX: { value: 3, min: -10, max: 10, step: 0.1 },
-    lightY: { value: 5, min: -10, max: 10, step: 0.1 },
-    lightZ: { value: 4, min: -10, max: 10, step: 0.1 },
-  });
-
+  const { lightX, lightY, lightZ } = useControls("Light Position", DIRECTIONAL_LIGHT_POSITION);
   return (
     <Canvas
       style={{ width: "100vw", height: "100vh", background: "#0b1221" }}
