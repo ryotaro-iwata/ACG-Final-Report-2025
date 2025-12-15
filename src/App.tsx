@@ -22,7 +22,7 @@ function App() {
         maxDistance={10}
       />
       <Suspense fallback={null}>
-        <Model />
+        <Model position={[lightX, lightY, lightZ]}/>
       </Suspense>
     </Canvas>
   );

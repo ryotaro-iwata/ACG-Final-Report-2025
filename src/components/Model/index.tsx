@@ -14,6 +14,11 @@ import { GLTFLoader, type GLTF } from "three/examples/jsm/Addons.js";
 import vertexShader from "../../shaders/test-toon/test-toon.vs?raw";
 import fragmentShader from "../../shaders/test-toon/test-toon.fs?raw";
 
+type TestToonMaterialUniformProps={
+  position: number[];
+}
+
+
 // 同じ元Materialからは同じToonShaderMaterialを再利用
 const TOON_MATERIAL_CACHE = new WeakMap<Material, ShaderMaterial>();
 
@@ -21,7 +26,7 @@ function toToonShaderMaterial(src: Material) {
   const hit = TOON_MATERIAL_CACHE.get(src);
   if (hit) return hit;
 
-  // 元マテリアルのプロパティを取得
+  // 元マテリアルのプロパティを取得s
   const m = src as unknown as {
     map?: unknown;
     color?: { clone: () => Color };
@@ -60,7 +65,7 @@ const OUTLINE_MATERIAL = new MeshBasicMaterial({
   side: BackSide,
 });
 
-const Model: FC = () => {
+const Model: FC<TestToonMaterialUniformProps> = (props) => {
   const [gltf, setGltf] = useState<GLTF | null>(null);
   useEffect(() => {
     const loader = new GLTFLoader();
@@ -88,6 +93,7 @@ const Model: FC = () => {
 
         mesh.castShadow = true;
         mesh.receiveShadow = true;
+        
 
         // SkinnedMeshの場合はアウトライン処理をスキップ
         if (mesh.isSkinnedMesh) return;
@@ -112,7 +118,31 @@ const Model: FC = () => {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+
+    if (!gltf) return;
+    
+    gltf.scene.traverse((obj) => {
+      const mesh = obj as Mesh;
+      if (!mesh.isMesh) return;
+      
+      const materials = Array.isArray(mesh.material) 
+        ? mesh.material 
+        : [mesh.material];
+      
+      materials.forEach((mat) => {
+        if (mat instanceof ShaderMaterial && mat.uniforms.lightDirection) {
+          mat.uniforms.lightDirection.value = (new Vector3(props.position[0],props.position[1],props.position[2])).normalize();
+        }
+      });
+    });
+  }, [gltf, props.position[0], props.position[1], props.position[2]]);
+
+
   if (!gltf) return null;
-  return <primitive object={gltf.scene} />;
+  return(
+      <primitive object={gltf.scene} />
+  );
 };
 export default Model;
