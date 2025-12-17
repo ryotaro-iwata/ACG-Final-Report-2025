@@ -11,10 +11,10 @@ import {
 import { GLTFLoader, type GLTF } from "three/examples/jsm/Addons.js";
 
 // シェーダーファイルを読み込む
-import vertexShader from "../../shaders/test-toon/test-toon.vs?raw";
-import fragmentShader from "../../shaders/test-toon/test-toon.fs?raw";
+import vertexShader from "../../../shaders/test-toon/test-toon.vs?raw";
+import fragmentShader from "../../../shaders/test-toon/test-toon.fs?raw";
 
-type TestToonMaterialUniformProps={
+type TestToonMaterialUniformProps = {
   position: number[];
 }
 
@@ -93,7 +93,7 @@ const Model: FC<TestToonMaterialUniformProps> = (props) => {
 
         mesh.castShadow = true;
         mesh.receiveShadow = true;
-        
+
 
         // SkinnedMeshの場合はアウトライン処理をスキップ
         if (mesh.isSkinnedMesh) return;
@@ -122,18 +122,18 @@ const Model: FC<TestToonMaterialUniformProps> = (props) => {
   useEffect(() => {
 
     if (!gltf) return;
-    
+
     gltf.scene.traverse((obj) => {
       const mesh = obj as Mesh;
       if (!mesh.isMesh) return;
-      
-      const materials = Array.isArray(mesh.material) 
-        ? mesh.material 
+
+      const materials = Array.isArray(mesh.material)
+        ? mesh.material
         : [mesh.material];
-      
+
       materials.forEach((mat) => {
         if (mat instanceof ShaderMaterial && mat.uniforms.lightDirection) {
-          mat.uniforms.lightDirection.value = (new Vector3(props.position[0],props.position[1],props.position[2])).normalize();
+          mat.uniforms.lightDirection.value = (new Vector3(props.position[0], props.position[1], props.position[2])).normalize();
         }
       });
     });
@@ -141,8 +141,8 @@ const Model: FC<TestToonMaterialUniformProps> = (props) => {
 
 
   if (!gltf) return null;
-  return(
-      <primitive object={gltf.scene} />
+  return (
+    <primitive object={gltf.scene} />
   );
 };
 export default Model;
