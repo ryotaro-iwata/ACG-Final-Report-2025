@@ -1,6 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import Model from "./components/Model/index";
+import ChocoCoromet from "./components/models/choco-coromet/index";
+import Horse from "./components/models/horse";
 import { Suspense } from "react";
 import { useControls } from "leva";
 import { DIRECTIONAL_LIGHT_POSITION } from "./const/DirectionalLight/params";
@@ -22,7 +23,11 @@ function App() {
         maxDistance={10}
       />
       <Suspense fallback={null}>
-        <Model />
+        <ChocoCoromet />
+      </Suspense>
+
+      <Suspense>
+        <Horse />
       </Suspense>
     </Canvas>
   );

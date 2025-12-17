@@ -83,7 +83,7 @@ const OUTLINE_MATERIAL = new MeshBasicMaterial({
   side: BackSide,
 });
 
-const Model: FC = () => {
+const ChocoCoromet: FC = () => {
   const [gltf, setGltf] = useState<GLTF | null>(null);
   useEffect(() => {
     const loader = new GLTFLoader();
@@ -142,4 +142,4 @@ const Model: FC = () => {
   if (!gltf) return null;
   return <primitive object={gltf.scene} />;
 };
-export default Model;
+export default ChocoCoromet;
