@@ -3,7 +3,8 @@ import { OrbitControls } from "@react-three/drei";
 import ChocoCoromet from "./components/Model/choco-coromet/index";
 import Horse from "./components/Model/horse";
 import { SceneObject } from "./components/Model/gltf-general";
-import { testToonShader, type TestToonUniforms } from "./shaders/test-toon/test-toon.tsx";
+import { testToonShader } from "./shaders/test-toon/test-toon.tsx";
+import { verySimpleShader } from "./shaders/very-simple/very-simple.tsx"
 import { Suspense } from "react";
 import { useControls } from "leva";
 import { DIRECTIONAL_LIGHT_POSITION } from "./const/DirectionalLight/params";
@@ -32,7 +33,8 @@ function App() {
         uniforms={{
             time: performance.now(),
             colorTint: [1, 0.5, 0.5],
-            lightDirection: [lightX, lightY, lightZ]
+            lightDirection: [lightX, lightY, lightZ],
+            lightIntensity: 1.0
         }}
         object={{
           position: [0, 0, 0],
@@ -56,7 +58,21 @@ function App() {
           scale: 1
         }}
       />
-      
+
+      /* チョココロネ2*/
+      <SceneObject
+        modelPath="/models/choco_coromet/coromet.gltf"
+        shader={verySimpleShader}
+        uniforms={{
+          lightDirection: [lightX, lightY, lightZ],
+          lightIntensity: 1.0
+        }}
+        object={{
+          position: [0, 2.5, 0],
+          rotation: [0, 0, 0],
+          scale: 0.3
+        }}
+      />    
 
     </Canvas>
   );
