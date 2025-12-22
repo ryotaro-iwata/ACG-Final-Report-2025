@@ -2,6 +2,7 @@ precision mediump float;
 
 uniform vec3 diffuse;
 uniform vec3 lightDirection;
+uniform float lightIntensity;
 uniform sampler2D map;
 uniform bool hasTexture;
 uniform float opacity;
@@ -47,6 +48,7 @@ void main() {
   
   // 最終カラー合成
   vec3 finalColor = baseColor.rgb * toonShade + rim;
+  finalColor *= lightIntensity;
 
   gl_FragColor = vec4(finalColor, baseColor.a * opacity);
 }

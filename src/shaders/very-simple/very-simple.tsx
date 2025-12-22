@@ -1,20 +1,16 @@
-// shaders/testToonShader.ts
 import { Color, Vector3 } from "three";
-import vertexShader from "./test-toon.vs?raw";
-import fragmentShader from "./test-toon.fs?raw";
+import vertexShader from "./very-simple.vs?raw";
+import fragmentShader from "./very-simple.fs?raw";
 import type { ShaderDefinition } from "../../types/shader";
 
 // このシェーダーで使用するuniformの型を定義
-export type TestToonUniforms = {
+export type VerySimpleUniforms = {
   lightDirection: [number, number, number];
   lightIntensity: number;
-  rimColor?: [number, number, number];
-  rimPower?: number;
-  rimIntensity?: number;
 };
 
 // シェーダー定義オブジェクトを作成・エクスポート
-export const testToonShader: ShaderDefinition<TestToonUniforms> = {
+export const verySimpleShader: ShaderDefinition<VerySimpleUniforms> = {
   // 頂点シェーダーのコード
   vertexShader,
   
@@ -25,9 +21,6 @@ export const testToonShader: ShaderDefinition<TestToonUniforms> = {
   defaultUniforms: {
     lightDirection: [1, 1, 1],
     lightIntensity: 1.0,
-    rimColor: [0.27, 1.0, 0.27],
-    rimPower: 1.5,
-    rimIntensity: 0.3,
   },
   
   // uniform値をThree.jsのuniform形式に変換する関数
@@ -41,15 +34,6 @@ export const testToonShader: ShaderDefinition<TestToonUniforms> = {
     },
     lightIntensity:{
         value: values.lightIntensity ?? 1.0
-    },
-    rimColor: {
-      value: new Color().fromArray(values.rimColor ?? [0.27, 1.0, 0.27]),
-    },
-    rimPower: { 
-      value: values.rimPower ?? 1.5 
-    },
-    rimIntensity: { 
-      value: values.rimIntensity ?? 0.3 
     },
   }),
 };
