@@ -22,11 +22,33 @@ function App() {
         minDistance={1}
         maxDistance={10}
       />
+      
+      /* チョココロネ*/
       <Suspense fallback={null}>
-        <ChocoCoromet position={[lightX, lightY, lightZ]} />
+        <ChocoCoromet
+          uniforms={{
+            lightDirection: [lightX, lightY, lightZ]
+          }}
+          object={{
+            position: [0, 0, 0],
+            rotation: [0, 0, 0],
+            scale: 1
+          }}
+        />
       </Suspense>
+
+      /*動物 */
       <Suspense fallback={null}>
-        <Horse />
+        <Horse
+          uniforms={{
+            lightDirection: [lightX, lightY, lightZ]
+          }}
+          object={{
+            position: [0, 0, 0],
+            rotation: [0, 0, 0],
+            scale: 1.0
+          }}
+        />
       </Suspense>
     </Canvas>
   );

@@ -14,10 +14,18 @@ import { GLTFLoader, type GLTF } from "three/examples/jsm/Addons.js";
 import vertexShader from "../../../shaders/test-toon/test-toon.vs?raw";
 import fragmentShader from "../../../shaders/test-toon/test-toon.fs?raw";
 
-type TestToonMaterialUniformProps = {
-  position: number[];
-}
-
+type ModelProps = {
+  // マテリアルのuniform用
+  uniforms: {
+    lightDirection: number[];
+  };
+  // オブジェクトのパラメータ用
+  object: {
+    position?: [number, number, number];
+    rotation?: [number, number, number];
+    scale?: [number, number, number] | number;
+  };
+};
 
 // 同じ元Materialからは同じToonShaderMaterialを再利用
 const TOON_MATERIAL_CACHE = new WeakMap<Material, ShaderMaterial>();
@@ -26,7 +34,7 @@ function toToonShaderMaterial(src: Material) {
   const hit = TOON_MATERIAL_CACHE.get(src);
   if (hit) return hit;
 
-  // 元マテリアルのプロパティを取得s
+  // 元マテリアルのプロパティを取得
   const m = src as unknown as {
     map?: unknown;
     color?: { clone: () => Color };
@@ -65,7 +73,7 @@ const OUTLINE_MATERIAL = new MeshBasicMaterial({
   side: BackSide,
 });
 
-const Model: FC<TestToonMaterialUniformProps> = (props) => {
+const Model: FC<ModelProps> = (props) => {
   const [gltf, setGltf] = useState<GLTF | null>(null);
   useEffect(() => {
     const loader = new GLTFLoader();
@@ -94,7 +102,6 @@ const Model: FC<TestToonMaterialUniformProps> = (props) => {
         mesh.castShadow = true;
         mesh.receiveShadow = true;
 
-
         // SkinnedMeshの場合はアウトライン処理をスキップ
         if (mesh.isSkinnedMesh) return;
 
@@ -120,7 +127,6 @@ const Model: FC<TestToonMaterialUniformProps> = (props) => {
   }, []);
 
   useEffect(() => {
-
     if (!gltf) return;
 
     gltf.scene.traverse((obj) => {
@@ -133,16 +139,24 @@ const Model: FC<TestToonMaterialUniformProps> = (props) => {
 
       materials.forEach((mat) => {
         if (mat instanceof ShaderMaterial && mat.uniforms.lightDirection) {
-          mat.uniforms.lightDirection.value = (new Vector3(props.position[0], props.position[1], props.position[2])).normalize();
+          mat.uniforms.lightDirection.value = new Vector3(
+            props.uniforms.lightDirection[0],
+            props.uniforms.lightDirection[1],
+            props.uniforms.lightDirection[2]
+          ).normalize();
         }
       });
     });
-  }, [gltf, props.position[0], props.position[1], props.position[2]]);
-
+  }, [gltf, props.uniforms.lightDirection[0], props.uniforms.lightDirection[1], props.uniforms.lightDirection[2]]);
 
   if (!gltf) return null;
   return (
-    <primitive object={gltf.scene} />
+    <primitive
+      object={gltf.scene}
+      position={props.object.position}
+      rotation={props.object.rotation}
+      scale={props.object.scale}
+    />
   );
 };
 export default Model;

@@ -1,145 +1,162 @@
 import { type FC, useState, useEffect } from "react";
 import {
-    DataTexture,
-    Mesh,
-    MeshBasicMaterial,
-    MeshToonMaterial,
-    NearestFilter,
-    NoColorSpace,
-    BackSide,
-    type Material,
+  Mesh,
+  MeshBasicMaterial,
+  ShaderMaterial,
+  BackSide,
+  Material,
+  Color,
+  Vector3,
 } from "three";
 import { GLTFLoader, type GLTF } from "three/examples/jsm/Addons.js";
 
-// 影の「段階」をハッキリ出すために、連続グラデーションではなく段階のみのランプを生成
-// NOTE: モデル数が増えても毎回作らないようにモジュールスコープで共有する
-const TOON_GRADIENT_MAP = (() => {
-    const levels = 4;
-    // 0..255の明度を段階で定義（好みで調整OK）
-    const steps = [32, 96, 176, 255];
-    const data = new Uint8Array(levels * 4);
-    for (let i = 0; i < levels; i++) {
-        const v = steps[i] ?? Math.round((i / (levels - 1)) * 255);
-        const o = i * 4;
-        data[o + 0] = v;
-        data[o + 1] = v;
-        data[o + 2] = v;
-        data[o + 3] = 255;
-    }
+// シェーダーファイルを読み込む
+import vertexShader from "../../../shaders/test-toon/test-toon.vs?raw";
+import fragmentShader from "../../../shaders/test-toon/test-toon.fs?raw";
 
-    const tex = new DataTexture(data, levels, 1);
-    tex.minFilter = NearestFilter;
-    tex.magFilter = NearestFilter;
-    tex.generateMipmaps = false;
-    tex.colorSpace = NoColorSpace;
-    tex.needsUpdate = true;
-    return tex;
-})();
+type HorseProps = {
+  // マテリアルのuniform用
+  uniforms: {
+    lightDirection: number[];
+  };
+  // オブジェクトのパラメータ用
+  object: {
+    position?: [number, number, number];
+    rotation?: [number, number, number];
+    scale?: [number, number, number] | number;
+  };
+};
 
-// 同じ元Materialからは同じToonMaterialを再利用（Mesh数が多いほど効く）
-// skinned / unskinned はシェーダdefineが変わるので別キャッシュにする
-const TOON_MATERIAL_CACHE = new WeakMap<
-    Material,
-    { skinned?: MeshToonMaterial; unskinned?: MeshToonMaterial }
->();
+// 同じ元Materialからは同じToonShaderMaterialを再利用
+const TOON_MATERIAL_CACHE = new WeakMap<Material, ShaderMaterial>();
 
-function toToonMaterial(src: Material, isSkinned: boolean) {
-    const cached = TOON_MATERIAL_CACHE.get(src) ?? {};
-    const key = isSkinned ? "skinned" : "unskinned";
-    const hit = cached[key];
-    if (hit) return hit;
+function toToonShaderMaterial(src: Material) {
+  const hit = TOON_MATERIAL_CACHE.get(src);
+  if (hit) return hit;
 
-    // 元マテリアルのテクスチャ/色などは可能な範囲で引き継ぐ
-    const m = src as unknown as {
-        map?: unknown;
-        color?: { clone: () => unknown };
-        transparent?: boolean;
-        opacity?: number;
-        side?: number;
-        alphaTest?: number;
-    };
+  // 元マテリアルのプロパティを取得
+  const m = src as unknown as {
+    map?: unknown;
+    color?: { clone: () => Color };
+    transparent?: boolean;
+    opacity?: number;
+    side?: number;
+    alphaTest?: number;
+  };
 
-    const toon = new MeshToonMaterial({
-        map: m.map as never,
-        color: (m.color?.clone?.() as never) ?? undefined,
-        transparent: m.transparent,
-        opacity: m.opacity,
-        side: m.side as never,
-        alphaTest: m.alphaTest,
-        gradientMap: TOON_GRADIENT_MAP,
-    });
+  const toon = new ShaderMaterial({
+    vertexShader,
+    fragmentShader,
+    uniforms: {
+      diffuse: { value: m.color?.clone?.() ?? new Color(0xffffff) },
+      lightDirection: { value: new Vector3(1, 1, 1).normalize() },
+      map: { value: m.map ?? null },
+      hasTexture: { value: !!m.map },
+      opacity: { value: m.opacity ?? 1.0 },
+      // リムライト設定（赤っぽい光、控えめの強さ、広めの幅）
+      rimColor: { value: new Color(0x44ff44) }, // 赤っぽい色
+      rimPower: { value: 1.5 }, // 広めの幅（小さいほど広い）
+      rimIntensity: { value: 0.3 }, // 控えめの強さ
+    },
+    transparent: m.transparent,
+    side: m.side as never,
+    alphaTest: m.alphaTest,
+  });
 
-    // threeの型定義上は存在しない扱いになるためanyで回避（実体としては有効）
-    if (isSkinned) (toon as unknown as { skinning: boolean }).skinning = true;
-
-    cached[key] = toon;
-    TOON_MATERIAL_CACHE.set(src, cached);
-    return toon;
+  TOON_MATERIAL_CACHE.set(src, toon);
+  return toon;
 }
 
 // アウトライン用の黒マテリアル（全Meshで共有）
 const OUTLINE_MATERIAL = new MeshBasicMaterial({
-    color: 0x000000,
-    side: BackSide,
+  color: 0x000000,
+  side: BackSide,
 });
 
-const Horse: FC = () => {
-    const [gltf, setGltf] = useState<GLTF | null>(null);
-    useEffect(() => {
-        const loader = new GLTFLoader();
-        let cancelled = false;
+const Horse: FC<HorseProps> = (props) => {
+  const [gltf, setGltf] = useState<GLTF | null>(null);
+  useEffect(() => {
+    const loader = new GLTFLoader();
+    let cancelled = false;
 
-        loader.load("/models/horse.gltf", (loadedGltf) => {
-            if (cancelled) return;
+    loader.load("/models/horse.gltf", (loadedGltf) => {
+      if (cancelled) return;
 
-            loadedGltf.scene.traverse((obj) => {
-                const mesh = obj as unknown as {
-                    isMesh?: boolean;
-                    isSkinnedMesh?: boolean;
-                    material?: Material | Material[];
-                    castShadow?: boolean;
-                    receiveShadow?: boolean;
-                    geometry?: unknown;
-                    parent?: { add: (child: unknown) => void } | null;
-                };
-                if (!mesh.isMesh || !mesh.material || !mesh.geometry) return;
-
-                // 元のマテリアルをToonMaterialに変換
-                mesh.material = Array.isArray(mesh.material)
-                    ? mesh.material.map((m) => toToonMaterial(m, !!mesh.isSkinnedMesh))
-                    : toToonMaterial(mesh.material, !!mesh.isSkinnedMesh);
-
-                mesh.castShadow = true;
-                mesh.receiveShadow = true;
-
-                // SkinnedMeshの場合はアウトライン処理をスキップ（複雑なため）
-                if (mesh.isSkinnedMesh) return;
-
-                // アウトライン用のMeshを複製
-                // 同じgeometryを使い、黒のBackSideマテリアルで裏面描画、少し拡大
-                const outlineMesh = new Mesh(mesh.geometry as never, OUTLINE_MATERIAL);
-                // 元のMeshのtransformをコピーしてから、scaleだけ1.01倍に拡大
-                outlineMesh.position.copy((mesh as Mesh).position);
-                outlineMesh.rotation.copy((mesh as Mesh).rotation);
-                outlineMesh.scale.copy((mesh as Mesh).scale);
-                outlineMesh.scale.multiplyScalar(1.01); // 元のscaleに1.01を掛ける
-                // アウトラインを先に描画するようにrenderOrderを設定
-                outlineMesh.renderOrder = -1;
-
-                // 元のMeshの親に追加（同じtransformが適用される）
-                if (mesh.parent) {
-                    mesh.parent.add(outlineMesh);
-                }
-            });
-
-            setGltf(loadedGltf);
-        });
-
-        return () => {
-            cancelled = true;
+      loadedGltf.scene.traverse((obj) => {
+        const mesh = obj as unknown as {
+          isMesh?: boolean;
+          isSkinnedMesh?: boolean;
+          material?: Material | Material[];
+          castShadow?: boolean;
+          receiveShadow?: boolean;
+          geometry?: unknown;
+          parent?: { add: (child: unknown) => void } | null;
         };
-    }, []);
-    if (!gltf) return null;
-    return <primitive object={gltf.scene} />;
+        if (!mesh.isMesh || !mesh.material || !mesh.geometry) return;
+
+        // 元のマテリアルをカスタムToonShaderMaterialに変換
+        mesh.material = Array.isArray(mesh.material)
+          ? mesh.material.map((m) => toToonShaderMaterial(m))
+          : toToonShaderMaterial(mesh.material);
+
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+
+        // SkinnedMeshの場合はアウトライン処理をスキップ
+        if (mesh.isSkinnedMesh) return;
+
+        // アウトライン用のMeshを複製
+        const outlineMesh = new Mesh(mesh.geometry as never, OUTLINE_MATERIAL);
+        outlineMesh.position.copy((mesh as Mesh).position);
+        outlineMesh.rotation.copy((mesh as Mesh).rotation);
+        outlineMesh.scale.copy((mesh as Mesh).scale);
+        outlineMesh.scale.multiplyScalar(1.01);
+        outlineMesh.renderOrder = -1;
+
+        if (mesh.parent) {
+          mesh.parent.add(outlineMesh);
+        }
+      });
+
+      setGltf(loadedGltf);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!gltf) return;
+
+    gltf.scene.traverse((obj) => {
+      const mesh = obj as Mesh;
+      if (!mesh.isMesh) return;
+
+      const materials = Array.isArray(mesh.material)
+        ? mesh.material
+        : [mesh.material];
+
+      materials.forEach((mat) => {
+        if (mat instanceof ShaderMaterial && mat.uniforms.lightDirection) {
+          mat.uniforms.lightDirection.value = new Vector3(
+            props.uniforms.lightDirection[0],
+            props.uniforms.lightDirection[1],
+            props.uniforms.lightDirection[2]
+          ).normalize();
+        }
+      });
+    });
+  }, [gltf, props.uniforms.lightDirection[0], props.uniforms.lightDirection[1], props.uniforms.lightDirection[2]]);
+
+  if (!gltf) return null;
+  return (
+    <primitive
+      object={gltf.scene}
+      position={props.object.position}
+      rotation={props.object.rotation}
+      scale={props.object.scale}
+    />
+  );
 };
 export default Horse;
