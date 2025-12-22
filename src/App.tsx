@@ -1,6 +1,9 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import Model from "./components/Model/index";
+import ChocoCoromet from "./components/Model/choco-coromet/index";
+import Horse from "./components/Model/horse";
+import { SceneObject } from "./components/Model/gltf-general";
+import { testToonShader, type TestToonUniforms } from "./shaders/test-toon/test-toon.tsx";
 import { Suspense } from "react";
 import { useControls } from "leva";
 import { DIRECTIONAL_LIGHT_POSITION } from "./const/DirectionalLight/params";
@@ -21,9 +24,40 @@ function App() {
         minDistance={1}
         maxDistance={10}
       />
-      <Suspense fallback={null}>
-        <Model />
-      </Suspense>
+
+      /* チョココロネ*/
+      <SceneObject
+        modelPath="/models/choco_coromet/coromet.gltf"
+        shader={testToonShader}
+        uniforms={{
+            time: performance.now(),
+            colorTint: [1, 0.5, 0.5],
+            lightDirection: [lightX, lightY, lightZ]
+        }}
+        object={{
+          position: [0, 0, 0],
+          rotation: [0, 0, 0],
+          scale: 1
+        }}
+      />
+
+      /*動物 */
+      <SceneObject
+        modelPath="/models/horse.gltf"
+        shader={testToonShader}
+        uniforms={{
+          time: performance.now(),
+          colorTint: [1, 0.5, 0.5],
+          lightDirection: [lightX, lightY, lightZ]
+        }}
+        object={{
+          position: [0, 0, 0],
+          rotation: [0, 0, 0],
+          scale: 1
+        }}
+      />
+      
+
     </Canvas>
   );
 }

@@ -2,7 +2,7 @@ import { type GLTF, GLTFLoader } from "three/examples/jsm/Addons.js";
 import { useState, useEffect } from "react";
 import { DoubleSide, type Material } from "three";
 
-const Model = () => {
+const ChocoCoromet = () => {
   const [gltf, setGltf] = useState<GLTF | null>(null);
   useEffect(() => {
     const loader = new GLTFLoader();
@@ -43,4 +43,4 @@ const Model = () => {
   return <primitive object={gltf.scene} />;
 };
 
-export default Model;
+export default ChocoCoromet;
