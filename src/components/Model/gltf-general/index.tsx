@@ -131,7 +131,7 @@ export const SceneObject: FC<SceneObjectProps> = (props) => {
     return () => {
       cancelled = true;
     };
-  }, [modelPath, shader]);
+  }, [modelPath, shader, uniforms]);
 
   // uniformの動的更新
   useEffect(() => {
