@@ -4,9 +4,6 @@ import { OrbitControls } from "@react-three/drei";
 import { useControls } from "leva";
 import { DIRECTIONAL_LIGHT_POSITION } from "./const/DirectionalLight/params";
 import { SceneObjectWrapper } from "./components/Scene/SceneObjectWrapper.tsx";
-// import { SceneTestSceneObjectWrapper_higashino } from "./components/Scene/SceneTestSceneObjectWrapper_higashino.tsx";
-// import { SceneTestSceneObjectWrapper_noda } from "./components/Scene/SceneTestSceneObjectWrapper_noda.tsx";
-// import { UiTestSceneObjectWrapper } from "./components/Scene/UiTestSceneObjectWrapper.tsx";
 
 function App() {
   const { lightX, lightY, lightZ } = useControls(
@@ -27,11 +24,7 @@ function App() {
         minDistance={1}
         maxDistance={10}
       />
-
       <SceneObjectWrapper lightX={lightX} lightY={lightY} lightZ={lightZ} />
-      {/* <SceneTestSceneObjectWrapper_higashino lightX={lightX} lightY={lightY} lightZ={lightZ} />
-      <SceneTestSceneObjectWrapper_noda lightX={lightX} lightY={lightY} lightZ={lightZ} />
-      <UiTestSceneObjectWrapper lightX={lightX} lightY={lightY} lightZ={lightZ} /> */}
     </Canvas>
   );
 }
