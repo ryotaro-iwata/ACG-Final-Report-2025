@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Object3D, Mesh, ShaderMaterial } from "three";
+import { Object3D, Mesh, ShaderMaterial, Material } from "three";
 import type { ShaderDefinition } from "../../../../types/shader";
 import { createShaderMaterial } from "../_utils/material";
 
@@ -19,13 +19,18 @@ export const useShaderModel = <T>(
             mesh.castShadow = true;
             mesh.receiveShadow = true;
 
-            // 配列と単体の両方に対応
-            const originalMaterials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+            if (!mesh.userData.originalMaterial) {
+                mesh.userData.originalMaterial = mesh.material;
+            }
+
+            const sourceMaterial = mesh.userData.originalMaterial as Material | Material[];
+            const originalMaterials = Array.isArray(sourceMaterial) ? sourceMaterial : [sourceMaterial];
             const newMaterials = originalMaterials.map((m) =>
                 createShaderMaterial(m, shader, uniforms)
             );
 
-            mesh.material = Array.isArray(mesh.material) ? newMaterials : newMaterials[0];
+            mesh.material = Array.isArray(sourceMaterial) ? newMaterials : newMaterials[0];
+
         });
     }, [scene, shader]); // uniformsは依存配列に入れない
 
