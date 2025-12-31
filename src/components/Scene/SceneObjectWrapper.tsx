@@ -1,4 +1,4 @@
-import { SceneObject } from "../Model/gltf-general/index";
+import { SceneObject } from "../Model/scene-object/index";
 import { testToonShader } from "../../shaders/test-toon/test-toon.tsx";
 import { verySimpleShader } from "../../shaders/very-simple/very-simple.tsx";
 
@@ -7,7 +7,7 @@ type SceneObjectWrapperProps = {
   lightY: number;
   lightZ: number;
 };
-export const SceneObjectWrapper = ({lightX,lightY,lightZ,}: SceneObjectWrapperProps) => {
+export const SceneObjectWrapper = ({ lightX, lightY, lightZ, }: SceneObjectWrapperProps) => {
   return (
     <>
       {/* チョココロネ*/}
