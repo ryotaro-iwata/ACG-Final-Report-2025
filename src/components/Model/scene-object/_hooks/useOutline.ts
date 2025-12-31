@@ -17,15 +17,13 @@ export const useOutline = (scene: Object3D | undefined) => {
             const mesh = obj as Mesh;
 
             const outlineMesh = new Mesh(mesh.geometry, OUTLINE_MATERIAL);
-            // 親のトランスフォームに追従させるため、単純にaddするだけにするか、
-            // world行列をコピーするかは構成次第ですが、元のコードに倣います
+
             outlineMesh.position.copy(mesh.position);
             outlineMesh.rotation.copy(mesh.rotation);
             outlineMesh.scale.copy(mesh.scale);
             outlineMesh.scale.multiplyScalar(1.01);
             outlineMesh.renderOrder = -1;
 
-            // 元のコードでは parent に add していました
             if (mesh.parent) {
                 mesh.parent.add(outlineMesh);
                 outlines.push(outlineMesh);

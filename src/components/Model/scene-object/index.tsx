@@ -18,13 +18,12 @@ type SceneObjectProps<T = Record<string, any>> = {
 export const SceneObject: FC<SceneObjectProps> = (props) => {
   const { modelPath, shader, uniforms, object = {} } = props;
 
-  // 1. R3F標準のローダーを使用（Suspense対応、キャッシュ自動化）
   const gltf = useGLTF(modelPath);
 
-  // 2. シーンのクローン（複数のSceneObjectで同じモデルを使う場合に汚染しないため）
+  // シーンのクローン（複数のSceneObjectで同じモデルを使う場合に汚染しないため）
   const scene = useMemo(() => gltf.scene.clone(true), [gltf.scene]);
 
-  // 3. フックでロジックを注入
+  // フックでロジックを注入
   useShaderModel(scene, shader, uniforms);
   useOutline(scene);
 
