@@ -1,9 +1,11 @@
-// hooks/useOutline.ts
 import { useEffect } from "react";
 import { Object3D, Mesh } from "three";
 import { OUTLINE_MATERIAL } from "../_utils/material";
+import { useControls } from "leva";
+import { OUTLINE_WEIGHT } from "../../../../const/SceneObject/patams";
 
 export const useOutline = (scene: Object3D | undefined) => {
+    const { outlineWeight } = useControls("Outline", OUTLINE_WEIGHT);
     useEffect(() => {
         if (!scene) return;
 
@@ -21,7 +23,7 @@ export const useOutline = (scene: Object3D | undefined) => {
             outlineMesh.position.copy(mesh.position);
             outlineMesh.rotation.copy(mesh.rotation);
             outlineMesh.scale.copy(mesh.scale);
-            outlineMesh.scale.multiplyScalar(1.01);
+            outlineMesh.scale.multiplyScalar(outlineWeight);
             outlineMesh.renderOrder = -1;
 
             if (mesh.parent) {
@@ -33,5 +35,5 @@ export const useOutline = (scene: Object3D | undefined) => {
         return () => {
             outlines.forEach((o) => o.removeFromParent());
         };
-    }, [scene]);
+    }, [scene, outlineWeight]);
 };
