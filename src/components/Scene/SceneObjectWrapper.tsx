@@ -18,52 +18,60 @@ export const SceneObjectWrapper = ({
   return (
     <>
       {/* チョココロネ*/}
-      <SceneObject
-        modelPath="/models/choco_coromet/coromet.gltf"
-        shader={OldCartoonShader}
-        uniforms={{
-          time: performance.now(),
-          colorTint: [1, 0.5, 0.5],
-          lightDirection: [lightX, lightY, lightZ],
-          lightIntensity: 1.0,
-        }}
-        object={{
-          position: [0, 0, 0],
-          rotation: [0, 0, 0],
-          scale: 1,
-        }}
-      />
+      <Suspense>
+        <SceneObject
+          modelPath="/models/choco_coromet/coromet.gltf"
+          shader={OldCartoonShader}
+          uniforms={{
+            time: performance.now(),
+            colorTint: [1, 0.5, 0.5],
+            lightDirection: [lightX, lightY, lightZ],
+            lightIntensity: 1.0,
+          }}
+          object={{
+            position: [0, 0, 0],
+            rotation: [0, 0, 0],
+            scale: 1,
+          }}
+        />
+      </Suspense>
 
       {/*動物 */}
-      <SceneObject
-        modelPath="/models/horse.gltf"
-        shader={testToonShader}
-        uniforms={{
-          time: performance.now(),
-          colorTint: [1, 0.5, 0.5],
-          lightDirection: [lightX, lightY, lightZ],
-        }}
-        object={{
-          position: [0, 0, 0],
-          rotation: [0, 0, 0],
-          scale: 1,
-        }}
-      />
+      <Suspense>
+        <SceneObject
+          modelPath="/models/horse.gltf"
+          shader={testToonShader}
+          uniforms={{
+            time: performance.now(),
+            colorTint: [1, 0.5, 0.5],
+            lightDirection: [lightX, lightY, lightZ],
+          }}
+          object={{
+            position: [0, 0, 0],
+            rotation: [0, 0, 0],
+            scale: 1,
+          }}
+        />
+      </Suspense>
+
 
       {/* チョココロネ2*/}
-      <SceneObject
-        modelPath="/models/choco_coromet/coromet.gltf"
-        shader={RainbowShader}
-        uniforms={{
-          lightDirection: [lightX, lightY, lightZ],
-          lightIntensity: 1.0,
-        }}
-        object={{
-          position: [0, 2.5, 0],
-          rotation: [0, 0, 0],
-          scale: 0.3,
-        }}
-      />
+      <Suspense>
+        <SceneObject
+          modelPath="/models/choco_coromet/coromet.gltf"
+          shader={RainbowShader}
+          uniforms={{
+            lightDirection: [lightX, lightY, lightZ],
+            lightIntensity: 1.0,
+          }}
+          object={{
+            position: [0, 2.5, 0],
+            rotation: [0, 0, 0],
+            scale: 0.3,
+          }}
+        />
+      </Suspense>
+
     </>
   );
 };
