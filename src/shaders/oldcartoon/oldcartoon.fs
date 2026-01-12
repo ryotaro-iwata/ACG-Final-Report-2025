@@ -56,6 +56,7 @@ void main() {
   // 彩度少し落とす
   float gray = dot(color, vec3(0.299, 0.587, 0.114));
   color = mix(vec3(gray), color, 0.1);
+  color += vec3(0.1);
 
   gl_FragColor = vec4(color, baseColor.a);
 }

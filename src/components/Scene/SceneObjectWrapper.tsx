@@ -1,19 +1,24 @@
 import { SceneObject } from "../Model/gltf-general/index";
 import { testToonShader } from "../../shaders/test-toon/test-toon.tsx";
 import { verySimpleShader } from "../../shaders/very-simple/very-simple.tsx";
-
+import { OldCartoonShader } from "../../shaders/oldcartoon/oldcartoon.tsx";
+import { RainbowShader } from "../../shaders/rainbow/rainbow.tsx";
 type SceneObjectWrapperProps = {
   lightX: number;
   lightY: number;
   lightZ: number;
 };
-export const SceneObjectWrapper = ({lightX,lightY,lightZ,}: SceneObjectWrapperProps) => {
+export const SceneObjectWrapper = ({
+  lightX,
+  lightY,
+  lightZ,
+}: SceneObjectWrapperProps) => {
   return (
     <>
       {/* チョココロネ*/}
       <SceneObject
         modelPath="/models/choco_coromet/coromet.gltf"
-        shader={testToonShader}
+        shader={OldCartoonShader}
         uniforms={{
           time: performance.now(),
           colorTint: [1, 0.5, 0.5],
@@ -46,7 +51,7 @@ export const SceneObjectWrapper = ({lightX,lightY,lightZ,}: SceneObjectWrapperPr
       {/* チョココロネ2*/}
       <SceneObject
         modelPath="/models/choco_coromet/coromet.gltf"
-        shader={verySimpleShader}
+        shader={RainbowShader}
         uniforms={{
           lightDirection: [lightX, lightY, lightZ],
           lightIntensity: 1.0,
