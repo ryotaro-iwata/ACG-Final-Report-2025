@@ -1,8 +1,10 @@
-import { SceneObject } from "../Model/gltf-general/index";
+import { SceneObject } from "../Model/scene-object/index";
 import { testToonShader } from "../../shaders/test-toon/test-toon.tsx";
 import { verySimpleShader } from "../../shaders/very-simple/very-simple.tsx";
 import { OldCartoonShader } from "../../shaders/oldcartoon/oldcartoon.tsx";
 import { RainbowShader } from "../../shaders/rainbow/rainbow.tsx";
+import { Suspense } from "react";
+
 type SceneObjectWrapperProps = {
   lightX: number;
   lightY: number;
