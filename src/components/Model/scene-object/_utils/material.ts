@@ -1,8 +1,7 @@
 import { Material, ShaderMaterial, Color, BackSide, MeshBasicMaterial } from "three";
 import type { ShaderDefinition } from "../../../../types/shader";
 
-// マテリアルキャッシュ（グローバルまたはContextで管理しても良い）
-const MATERIAL_CACHE = new WeakMap<Material, ShaderMaterial>();
+const SHADER_CACHE = new WeakMap<object, WeakMap<Material, ShaderMaterial>>();
 
 export const OUTLINE_MATERIAL = new MeshBasicMaterial({
     color: 0x000000,
@@ -14,7 +13,12 @@ export function createShaderMaterial<T>(
     shader: ShaderDefinition<T>,
     uniformValues: Partial<T>
 ): ShaderMaterial {
-    const cached = MATERIAL_CACHE.get(src);
+    let materialCache = SHADER_CACHE.get(shader);
+    if (!materialCache) {
+        materialCache = new WeakMap();
+        SHADER_CACHE.set(shader, materialCache);
+    }
+    const cached = materialCache.get(src);
     if (cached) return cached;
 
     const m = src as any;
@@ -35,6 +39,6 @@ export function createShaderMaterial<T>(
         alphaTest: m.alphaTest,
     });
 
-    MATERIAL_CACHE.set(src, material);
+    materialCache.set(src, material);
     return material;
 }
