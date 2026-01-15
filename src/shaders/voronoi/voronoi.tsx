@@ -30,8 +30,8 @@ export const VoronoiShader: ShaderDefinition<VoronoiUniforms> = {
     rimColor: [0.7, 0.2, 0.0],//リムの色
     rimPower: 1.5,//リムの範囲（大きいほど狭い範囲に）
     rimIntensity: 0.0,//リムの強さ
-    voronoiScale: 10.0,//マスの多さ
-    voronoiIntensity: 0.4,//ボロノイの色をどれだけ反映させるか
+    voronoiScale: 40.0,//マスの多さ
+    voronoiIntensity: 0.4,//ボロノイの色をどれsだけ反映させるか
   },
   
   // uniform値をThree.jsのuniform形式に変換する関数
