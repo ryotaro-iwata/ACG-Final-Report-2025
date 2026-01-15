@@ -26,12 +26,12 @@ export const SomethingShader: ShaderDefinition<SomethingUniforms> = {
   // デフォルト値
   defaultUniforms: {
     lightDirection: [1, 1, 1],
-    lightIntensity: 1.0,
-    rimColor: [0.7, 0.2, 0.0],
-    rimPower: 1.5,
-    rimIntensity: 0.0,
-    voronoiScale: 10.0,
-    voronoiIntensity: 0.4,
+    lightIntensity: 1.0,//光の強さ
+    rimColor: [0.7, 0.2, 0.0],//リムの色
+    rimPower: 1.5,//リムの範囲（大きいほど狭い範囲に）
+    rimIntensity: 0.0,//リムの強さ
+    voronoiScale: 10.0,//マスの多さ
+    voronoiIntensity: 0.4,//ボロノイの色をどれだけ反映させるか
   },
   
   // uniform値をThree.jsのuniform形式に変換する関数
