@@ -1,11 +1,11 @@
 // shaders/somethingShader.ts
 import { Color, Vector3 } from "three";
-import vertexShader from "./something.vs?raw";
-import fragmentShader from "./something.fs?raw";
+import vertexShader from "./voronoi.vs?raw";
+import fragmentShader from "./voronoi.fs?raw";
 import type { ShaderDefinition } from "../../types/shader";
 
 // このシェーダーで使用するuniformの型を定義
-export type SomethingUniforms = {
+export type VoronoiUniforms = {
   lightDirection: [number, number, number];
   lightIntensity: number;
   rimColor?: [number, number, number];
@@ -16,7 +16,7 @@ export type SomethingUniforms = {
 };
 
 // シェーダー定義オブジェクトを作成・エクスポート
-export const SomethingShader: ShaderDefinition<SomethingUniforms> = {
+export const VoronoiShader: ShaderDefinition<VoronoiUniforms> = {
   // 頂点シェーダーのコード
   vertexShader,
   
