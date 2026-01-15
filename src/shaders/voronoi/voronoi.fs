@@ -27,10 +27,11 @@ vec2 random2(vec2 st) {
 }
 
 // ボロノイ図の計算（最近傍セルのIDと中心点のUV座標を返す）
+// UVをグリッド上に分割する
 vec3 voronoiCell(vec2 uv, float scale) {
     vec2 st = uv * scale;
     
-    vec2 ist = floor(st);  // 整数部分
+    vec2 ist = floor(st);  // 整数部分（現在、何行何列目のマスにいるか？）
     vec2 fst = fract(st);  // 小数部分
     
     float minDistance = 5.0;
