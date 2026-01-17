@@ -59,6 +59,7 @@ export const useShaderModel = <T>(
     useFrame((state) => {
         const time = state.clock.elapsedTime;
         materialRef.current.forEach((mat) => {
+            // time uniformがあれば更新
             if (mat.uniforms.time) {
                 mat.uniforms.time.value = time;
             }
