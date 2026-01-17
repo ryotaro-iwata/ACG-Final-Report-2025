@@ -6,6 +6,7 @@ uniform float lightIntensity;
 uniform sampler2D map;
 uniform bool hasTexture;
 uniform float time;
+uniform bool hasTime;
 
 uniform float noiseScale;
 uniform float noiseIntensity;
@@ -24,7 +25,9 @@ float interpolate(float a, float b, float x){
 }
 
 float rnd(vec2 p){
-    return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+    float offs=time;
+    if(!hasTime)offs = 0.0;
+    return fract(offs+sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
 }
 
 float irnd(vec2 p){

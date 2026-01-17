@@ -11,6 +11,7 @@ export type NoiseUniforms = {
   noiseIntensity: number;
   noiseScale: number;
   gray: boolean;
+  hasTime: boolean;
 };
 
 // シェーダー定義オブジェクトを作成・エクスポート
@@ -28,7 +29,8 @@ export const NoiseShader: ShaderDefinition<NoiseUniforms> = {
     time: 0.0,
     noiseIntensity: 2.0,
     noiseScale: 10.0,
-    gray: false
+    gray: false,
+    hasTime: false,
   },
   
   // uniform値をThree.jsのuniform形式に変換する関数
@@ -54,6 +56,9 @@ export const NoiseShader: ShaderDefinition<NoiseUniforms> = {
     },
     gray:{
       value: values.gray ?? false
+    },
+    hasTime:{
+      value: values.hasTime ?? false
     }
   }),
 };
