@@ -69,6 +69,8 @@ float fbm( vec2 p ) {
    }
    return f; }
 
+uniform vec3 diffuse;
+uniform bool hasTexture;
 
 uniform vec3 lightDirection;
 uniform float lightIntensity;
@@ -139,7 +141,7 @@ void main(void){
         toonShade = 0.125; // 32/255
     }
 
-    vec3 texColor=texture2D(map,vUv).xyz;
+    vec3 texColor=hasTexture ? texture2D(map,vUv).xyz : diffuse;
 
     vec3 finalColor=vec3(0.0);
     if(isPastel)
