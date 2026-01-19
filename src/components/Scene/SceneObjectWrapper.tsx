@@ -4,6 +4,8 @@ import { verySimpleShader } from "../../shaders/very-simple/very-simple.tsx";
 import { OldCartoonShader } from "../../shaders/oldcartoon/oldcartoon.tsx";
 import { RainbowShader } from "../../shaders/rainbow/rainbow.tsx";
 import { Suspense } from "react";
+import { VoronoiShader } from "../../shaders/voronoi/voronoi.tsx";
+import { fBMWaterShader } from "../../shaders/fbmwater/fbmwater.tsx";
 
 type SceneObjectWrapperProps = {
   lightX: number;
@@ -20,7 +22,7 @@ export const SceneObjectWrapper = ({
       {/* チョココロネ*/}
       <Suspense>
         <SceneObject
-          modelPath="/models/choco_coromet/coromet.gltf"
+          modelPath="/models/chair/chair.gltf"
           shader={OldCartoonShader}
           uniforms={{
             time: performance.now(),
@@ -39,8 +41,8 @@ export const SceneObjectWrapper = ({
       {/*動物 */}
       <Suspense>
         <SceneObject
-          modelPath="/models/horse.gltf"
-          shader={testToonShader}
+          modelPath="/models/cactus/cactus2.gltf"
+          shader={VoronoiShader}
           uniforms={{
             time: performance.now(),
             colorTint: [1, 0.5, 0.5],
@@ -58,7 +60,7 @@ export const SceneObjectWrapper = ({
       {/* チョココロネ2*/}
       <Suspense>
         <SceneObject
-          modelPath="/models/choco_coromet/coromet.gltf"
+          modelPath="/models/tv/tv.gltf"
           shader={RainbowShader}
           uniforms={{
             lightDirection: [lightX, lightY, lightZ],
@@ -66,6 +68,23 @@ export const SceneObjectWrapper = ({
           }}
           object={{
             position: [0, 2.5, 0],
+            rotation: [0, 0, 0],
+            scale: 0.3,
+          }}
+        />
+      </Suspense>
+
+      {/* チョココロネ2*/}
+      <Suspense>
+        <SceneObject
+          modelPath="/models/bookshelf/bookshelf.gltf"
+          shader={fBMWaterShader}
+          uniforms={{
+            lightDirection: [lightX, lightY, lightZ],
+            lightIntensity: 1.0,
+          }}
+          object={{
+            position: [0, 2.5, 4.0],
             rotation: [0, 0, 0],
             scale: 0.3,
           }}
