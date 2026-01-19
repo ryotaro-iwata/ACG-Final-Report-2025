@@ -99,7 +99,7 @@
 				4
 			],
 			"mesh":5,
-			"name":"bed_flame",
+			"name":"bed",
 			"rotation":[
 				0,
 				0.706697940826416,
@@ -520,7 +520,7 @@
 				24
 			],
 			"mesh":25,
-			"name":"body",
+			"name":"myakumyaku",
 			"rotation":[
 				0.7008590698242188,
 				0.08223263174295425,
