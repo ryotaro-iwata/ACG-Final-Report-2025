@@ -8,7 +8,7 @@ export const SceneObjectWrapper = () => {
     <>
       <Suspense>
         <SceneObject
-          modelPath="/models/test_room/test_room.gltf"
+          modelPath="/models/room.gltf"
           rules={rules}
           object={{
             position: [0, 0, 0],
@@ -17,7 +17,6 @@ export const SceneObjectWrapper = () => {
           }}
         />
       </Suspense>
-
     </>
   );
 };
