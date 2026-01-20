@@ -1,0 +1,11 @@
+Model Information:
+* title:	Antique Statue
+* source:	https://sketchfab.com/3d-models/antique-statue-431bfdcc8e164b0c8b5fbacabfa25aff
+* author:	Photoneo (https://sketchfab.com/photoneo)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Antique Statue" (https://sketchfab.com/3d-models/antique-statue-431bfdcc8e164b0c8b5fbacabfa25aff) by Photoneo (https://sketchfab.com/photoneo) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
