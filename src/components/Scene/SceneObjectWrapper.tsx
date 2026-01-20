@@ -1,33 +1,35 @@
 import { SceneObject } from "../Model/scene-object/index";
-import { testToonShader } from "../../shaders/test-toon/test-toon.tsx";
-import { verySimpleShader } from "../../shaders/very-simple/very-simple.tsx";
-import { OldCartoonShader } from "../../shaders/oldcartoon/oldcartoon.tsx";
-import { RainbowShader } from "../../shaders/rainbow/rainbow.tsx";
 import { Suspense } from "react";
+import { useNormalRules } from "./_hooks/useNormalRules";
+import { useVaporRules } from "./_hooks/useVaporRules";
+import { useControls } from "leva";
 
-type SceneObjectWrapperProps = {
-  lightX: number;
-  lightY: number;
-  lightZ: number;
-};
-export const SceneObjectWrapper = ({
-  lightX,
-  lightY,
-  lightZ,
-}: SceneObjectWrapperProps) => {
+export const SceneObjectWrapper = () => {
+  const { themeMode } = useControls("SHader Theme", {
+    themeMode: {
+      value: "Normal",
+      options: ["Normal", "Vaporwave"]
+    }
+  })
+  const normalRules = useNormalRules();
+  const vaporRules = useVaporRules();
+
+  let rules;
+  switch (themeMode) {
+    case "Vaporwave":
+      rules = vaporRules;
+      break;
+    case "Normal":
+    default:
+      rules = normalRules;
+      break;
+  }
   return (
     <>
-      {/* チョココロネ*/}
       <Suspense>
         <SceneObject
-          modelPath="/models/choco_coromet/coromet.gltf"
-          shader={OldCartoonShader}
-          uniforms={{
-            time: performance.now(),
-            colorTint: [1, 0.5, 0.5],
-            lightDirection: [lightX, lightY, lightZ],
-            lightIntensity: 1.0,
-          }}
+          modelPath="/models/room.gltf"
+          rules={rules}
           object={{
             position: [0, 0, 0],
             rotation: [0, 0, 0],
@@ -35,43 +37,6 @@ export const SceneObjectWrapper = ({
           }}
         />
       </Suspense>
-
-      {/*動物 */}
-      <Suspense>
-        <SceneObject
-          modelPath="/models/horse.gltf"
-          shader={testToonShader}
-          uniforms={{
-            time: performance.now(),
-            colorTint: [1, 0.5, 0.5],
-            lightDirection: [lightX, lightY, lightZ],
-          }}
-          object={{
-            position: [0, 0, 0],
-            rotation: [0, 0, 0],
-            scale: 1,
-          }}
-        />
-      </Suspense>
-
-
-      {/* チョココロネ2*/}
-      <Suspense>
-        <SceneObject
-          modelPath="/models/choco_coromet/coromet.gltf"
-          shader={RainbowShader}
-          uniforms={{
-            lightDirection: [lightX, lightY, lightZ],
-            lightIntensity: 1.0,
-          }}
-          object={{
-            position: [0, 2.5, 0],
-            rotation: [0, 0, 0],
-            scale: 0.3,
-          }}
-        />
-      </Suspense>
-
     </>
   );
 };

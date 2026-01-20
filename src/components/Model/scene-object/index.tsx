@@ -1,13 +1,12 @@
 import { type FC, useMemo } from "react";
 import { useGLTF } from "@react-three/drei";
-import type { ShaderDefinition } from "../../../types/shader";
+import type { ShaderRule } from "../../../types/shader";
 import { useShaderModel } from "./_hooks/useShaderModel";
 import { useOutline } from "./_hooks/useOutline";
 
-type SceneObjectProps<T = Record<string, any>> = {
+type SceneObjectProps = {
   modelPath: string;
-  shader: ShaderDefinition<T>;
-  uniforms: Partial<T>;
+  rules: ShaderRule[];
   object?: {
     position?: [number, number, number];
     rotation?: [number, number, number];
@@ -16,7 +15,7 @@ type SceneObjectProps<T = Record<string, any>> = {
 };
 
 export const SceneObject: FC<SceneObjectProps> = (props) => {
-  const { modelPath, shader, uniforms, object = {} } = props;
+  const { modelPath, rules, object = {} } = props;
 
   const gltf = useGLTF(modelPath);
 
@@ -24,7 +23,7 @@ export const SceneObject: FC<SceneObjectProps> = (props) => {
   const scene = useMemo(() => gltf.scene.clone(true), [gltf.scene]);
 
   // フックでロジックを注入
-  useShaderModel(scene, shader, uniforms);
+  useShaderModel(scene, rules);
   useOutline(scene);
 
   return (

@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 import { Object3D, Mesh } from "three";
 import { OUTLINE_MATERIAL } from "../_utils/material";
 import { useControls } from "leva";
-import { OUTLINE_ACTIVE, OUTLINE_COLOR, OUTLINE_WEIGHT } from "../../../../const/SceneObject/patams";
+import { OUTLINE_ACTIVE, OUTLINE_COLOR, OUTLINE_WEIGHT } from "../../../../const/SceneObject/params";
 
 export const useOutline = (scene: Object3D | undefined) => {
     const { outlineWeight } = useControls("Outline_weight", OUTLINE_WEIGHT);
