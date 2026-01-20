@@ -17,7 +17,7 @@ export const useNormalRules = () => {
                 time: performance.now(),
                 colorTint: [1, 0.5, 0.5],
                 lightDirection: [lightX, lightY, lightZ],
-                lightIntensity: 3.0,
+                lightIntensity: 1.0,
             },
         };
         const overrides: Record<string, any> = {
