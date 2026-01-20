@@ -24,7 +24,7 @@ function App() {
         minDistance={1}
         maxDistance={10}
       />
-      <SceneObjectWrapper lightX={lightX} lightY={lightY} lightZ={lightZ} />
+      <SceneObjectWrapper />
     </Canvas>
   );
 }
