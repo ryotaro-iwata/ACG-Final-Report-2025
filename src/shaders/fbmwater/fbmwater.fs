@@ -69,6 +69,8 @@ float fbm( vec2 p ) {
    }
    return f; }
 
+uniform vec3 diffuse;
+uniform bool hasTexture;
 
 uniform vec3 lightDirection;
 uniform float lightIntensity;
@@ -139,7 +141,7 @@ void main(void){
         toonShade = 0.125; // 32/255
     }
 
-    vec3 texColor=texture2D(map,vUv).xyz;
+    vec3 texColor=hasTexture ? texture2D(map,vUv).xyz : diffuse;
 
     vec3 finalColor=vec3(0.0);
     if(isPastel)
@@ -151,10 +153,12 @@ void main(void){
     if(hasTime)
         t=floor(time);
 
-    float n1 = fbm( vUv*2000.0/noiseScale +t);
-    float n2 = fbm( vUv*200.0/noiseScale+vec2(100.0,1.0)*t );
-    float n3 = fbm( vUv*20.0/noiseScale+vec2(1.0,2.0)*t );
-    float n4 = fbm( vUv*10.0/noiseScale+vec2(2.0,1.0)*t );
+    float n1=0.0,n2=0.0,n3=0.0,n4=0.0;
+
+    n1 = fbm( vUv*400.0/noiseScale +t);
+    n2 = fbm( vUv*200.0/noiseScale+vec2(2.0,2.0)*t );
+    n3 = fbm( vUv*100.0/noiseScale+vec2(1.0,2.0)*t );
+    n4 = fbm( vUv*50.0/noiseScale+vec2(2.0,1.0)*t );
     float n=n1+n2+n3+n4;
     
     finalColor+=max(vec3(n*0.5+0.5),0.0)*0.1;
