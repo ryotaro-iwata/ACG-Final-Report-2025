@@ -97,6 +97,14 @@ void main() {
         // テクスチャがない場合は元の色を使う
         voronoiColor = diffuse;
     }
+
+    // ★ セルごとの色のバリエーションを追加
+    // セルIDを計算（グリッド座標）
+    vec2 cellId = floor(vUv * voronoiScale);
+    // セルIDから疑似乱数を生成（-0.05 ~ +0.05の範囲）
+    vec2 rand = random2(cellId);
+    float colorVariation = (rand.x + rand.y) * 0.025; // 0.05くらいまで調整可能
+    voronoiColor += colorVariation;
     
     // 先にシェーディングを適用（ボロノイの境界を崩さない）
     vec3 shadedBase = baseColor.rgb * toonShade;
