@@ -35,7 +35,7 @@ export const testToonShader: ShaderDefinition<TestToonUniforms> = {
     rimPower: 1.5,
     rimIntensity: 0.0,
     color: [0.0,0.0,0.0],
-    colorType: 0
+    colorType: 1
   },
   
   // uniform値をThree.jsのuniform形式に変換する関数
@@ -63,7 +63,7 @@ export const testToonShader: ShaderDefinition<TestToonUniforms> = {
       value: values.color ?? [0.0,0.0,0.0]
     },
     colorType:{
-      value: values.colorType ?? 0
+      value: values.colorType ?? 1
     }
   }),
 };
