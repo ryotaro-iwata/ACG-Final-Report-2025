@@ -9,6 +9,8 @@ uniform float opacity;
 uniform vec3 rimColor;
 uniform float rimPower;
 uniform float rimIntensity;
+uniform int colorType;
+uniform vec3 color;
 
 varying vec3 vNormal;
 varying vec3 vViewPosition;
@@ -17,6 +19,13 @@ varying vec2 vUv;
 void main() {
   // ベースカラー（テクスチャまたは単色）
   vec4 baseColor = hasTexture ? texture2D(map, vUv) : vec4(diffuse, 1.0);
+
+  if(colorType==0)
+    baseColor=vec4(color,1.0);
+  else if(colorType==1)
+    baseColor=baseColor+vec4(color,1.0);
+  else 
+    baseColor=baseColor*vec4(color,1.0);
   
   // その部分での法線
   vec3 normal = normalize(vNormal);
