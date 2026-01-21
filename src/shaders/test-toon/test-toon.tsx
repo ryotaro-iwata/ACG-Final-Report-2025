@@ -25,9 +25,9 @@ export const testToonShader: ShaderDefinition<TestToonUniforms> = {
   defaultUniforms: {
     lightDirection: [1, 1, 1],
     lightIntensity: 1.0,
-    rimColor: [0.27, 1.0, 0.27],
+    rimColor: [1.0, 1.0, 1.0],
     rimPower: 1.5,
-    rimIntensity: 0.3,
+    rimIntensity: 0.0,
   },
   
   // uniform値をThree.jsのuniform形式に変換する関数
@@ -43,13 +43,13 @@ export const testToonShader: ShaderDefinition<TestToonUniforms> = {
         value: values.lightIntensity ?? 1.0
     },
     rimColor: {
-      value: new Color().fromArray(values.rimColor ?? [0.27, 1.0, 0.27]),
+      value: new Color().fromArray(values.rimColor ?? [1.0, 1.0, 1.0]),
     },
     rimPower: { 
       value: values.rimPower ?? 1.5 
     },
     rimIntensity: { 
-      value: values.rimIntensity ?? 0.3 
+      value: values.rimIntensity ?? 0.30
     },
   }),
 };
