@@ -25,6 +25,9 @@ export const useVaporRules = () => {
             "myakumyaku": {
                 shader: RainbowShader,
             },
+            "earth_ball": {
+                shader: OldCartoonShader,
+            },
             "kirby": {
                 shader: OldCartoonShader
             },
