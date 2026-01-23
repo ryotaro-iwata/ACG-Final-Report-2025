@@ -1,4 +1,4 @@
-import { Color, Vector3 } from "three";
+import { Vector3 } from "three";
 import vertexShader from "./very-simple.vs?raw";
 import fragmentShader from "./very-simple.fs?raw";
 import type { ShaderDefinition } from "../../types/shader";
@@ -13,16 +13,16 @@ export type VerySimpleUniforms = {
 export const verySimpleShader: ShaderDefinition<VerySimpleUniforms> = {
   // 頂点シェーダーのコード
   vertexShader,
-  
+
   // フラグメントシェーダーのコード
   fragmentShader,
-  
+
   // デフォルト値
   defaultUniforms: {
     lightDirection: [1, 1, 1],
     lightIntensity: 1.0,
   },
-  
+
   // uniform値をThree.jsのuniform形式に変換する関数
   createUniforms: (values) => ({
     lightDirection: {
@@ -32,8 +32,8 @@ export const verySimpleShader: ShaderDefinition<VerySimpleUniforms> = {
         values.lightDirection?.[2] ?? 1
       ).normalize(),
     },
-    lightIntensity:{
-        value: values.lightIntensity ?? 1.0
+    lightIntensity: {
+      value: values.lightIntensity ?? 1.0
     },
   }),
 };

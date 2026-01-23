@@ -1,4 +1,4 @@
-import { Color, Vector3 } from "three";
+import { Vector3 } from "three";
 import vertexShader from "./noise.vs?raw";
 import fragmentShader from "./noise.fs?raw";
 import type { ShaderDefinition } from "../../types/shader";
@@ -18,10 +18,10 @@ export type NoiseUniforms = {
 export const NoiseShader: ShaderDefinition<NoiseUniforms> = {
   // 頂点シェーダーのコード
   vertexShader,
-  
+
   // フラグメントシェーダーのコード
   fragmentShader,
-  
+
   // デフォルト値
   defaultUniforms: {
     lightDirection: [1, 1, 1],
@@ -32,7 +32,7 @@ export const NoiseShader: ShaderDefinition<NoiseUniforms> = {
     gray: false,
     hasTime: false,
   },
-  
+
   // uniform値をThree.jsのuniform形式に変換する関数
   createUniforms: (values) => ({
     lightDirection: {
@@ -42,22 +42,22 @@ export const NoiseShader: ShaderDefinition<NoiseUniforms> = {
         values.lightDirection?.[2] ?? 1
       ).normalize(),
     },
-    lightIntensity:{
-        value: values.lightIntensity ?? 1.0
+    lightIntensity: {
+      value: values.lightIntensity ?? 1.0
     },
-    time:{
-        value: values.time ?? 0.0
+    time: {
+      value: values.time ?? 0.0
     },
-    noiseIntensity:{
+    noiseIntensity: {
       value: values.noiseIntensity ?? 2.0
     },
-    noiseScale:{
+    noiseScale: {
       value: values.noiseScale ?? 10.0
     },
-    gray:{
+    gray: {
       value: values.gray ?? false
     },
-    hasTime:{
+    hasTime: {
       value: values.hasTime ?? false
     }
   }),
