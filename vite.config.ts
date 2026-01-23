@@ -8,4 +8,5 @@ export default defineConfig({
   server: {
     host: true,
   },
+  base: '/ACG-Final-Report-2025/',
 })
