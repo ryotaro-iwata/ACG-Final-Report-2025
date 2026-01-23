@@ -1,4 +1,4 @@
-import { Color, Vector3 } from "three";
+import { Vector3 } from "three";
 import vertexShader from "./fbmwater.vs?raw";
 import fragmentShader from "./fbmwater.fs?raw";
 import type { ShaderDefinition } from "../../types/shader";
@@ -21,10 +21,10 @@ export type fBMWaterUniforms = {
 export const fBMWaterShader: ShaderDefinition<fBMWaterUniforms> = {
   // 頂点シェーダーのコード
   vertexShader,
-  
+
   // フラグメントシェーダーのコード
   fragmentShader,
-  
+
   // デフォルト値
   defaultUniforms: {
     lightDirection: [1, 1, 1],
@@ -35,7 +35,7 @@ export const fBMWaterShader: ShaderDefinition<fBMWaterUniforms> = {
     pastelIntensity: 0.3,
     hasTime: false,
   },
-  
+
   // uniform値をThree.jsのuniform形式に変換する関数
   createUniforms: (values) => ({
     lightDirection: {
@@ -45,22 +45,22 @@ export const fBMWaterShader: ShaderDefinition<fBMWaterUniforms> = {
         values.lightDirection?.[2] ?? 1
       ).normalize(),
     },
-    lightIntensity:{
-        value: values.lightIntensity ?? 1.0
+    lightIntensity: {
+      value: values.lightIntensity ?? 1.0
     },
-    time:{
-        value: values.time ?? 0.0
+    time: {
+      value: values.time ?? 0.0
     },
-    noiseScale:{
+    noiseScale: {
       value: values.noiseScale ?? 1.0
     },
-    isPastel:{
+    isPastel: {
       value: values.isPastel ?? false
     },
-    pastelIntensity:{
+    pastelIntensity: {
       value: values.pastelIntensity ?? 0.3
     },
-    hasTime:{
+    hasTime: {
       value: values.hasTime ?? false
     }
   }),
