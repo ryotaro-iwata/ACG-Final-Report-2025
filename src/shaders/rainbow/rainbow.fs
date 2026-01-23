@@ -35,7 +35,7 @@ void main() {
       0.5
   );
 
-  float sat = 0.7;   // ← 低彩度
+  float sat = 0.7;   
   float val = 1.0;
 
   vec3 rainbow = hsv2rgb(vec3(hue, sat, val));
