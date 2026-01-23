@@ -28,7 +28,8 @@ export const SceneObjectWrapper = () => {
     <>
       <Suspense>
         <SceneObject
-          modelPath="/models/room.gltf"
+          // modelPath="/models/room.gltf"
+          modelPath={`${import.meta.env.BASE_URL}models/room.gltf`}
           rules={rules}
           object={{
             position: [-8, -12.5, -28],
