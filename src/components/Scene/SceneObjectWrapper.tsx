@@ -14,7 +14,7 @@ export const SceneObjectWrapper = () => {
   const normalRules = useNormalRules();
   const vaporRules = useVaporRules();
 
-  let rules;
+  let rules: any[];
   switch (themeMode) {
     case "Vaporwave":
       rules = vaporRules;

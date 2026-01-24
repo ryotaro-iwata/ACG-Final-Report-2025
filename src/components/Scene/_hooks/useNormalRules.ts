@@ -20,7 +20,6 @@ export const useNormalRules = () => {
         };
         const overrides: Record<string, any> = {
             // ここに名前ごとの上書き設定を書く
-
         }
         return [
             ...namelist.map((name) => {
