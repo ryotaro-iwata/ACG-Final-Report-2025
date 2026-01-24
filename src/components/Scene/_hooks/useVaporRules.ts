@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { monitor, useControls } from "leva";
+import { useControls } from "leva";
 import { DIRECTIONAL_LIGHT_POSITION } from "../../../const/DirectionalLight/params";
 import { namelist } from "../_const/nameList";
 import { RainbowShader } from "../../../shaders/rainbow/rainbow";
