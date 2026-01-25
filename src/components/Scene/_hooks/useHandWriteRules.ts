@@ -2,8 +2,6 @@ import { useMemo } from "react";
 import { useControls } from "leva";
 import { DIRECTIONAL_LIGHT_POSITION } from "../../../const/DirectionalLight/params";
 import { namelist } from "../_const/nameList";
-import { OldCartoonShader } from "../../../shaders/oldcartoon/oldcartoon";
-import { RainbowShader } from "../../../shaders/rainbow/rainbow";
 import { fBMWaterShader } from "../../../shaders/fbmwater/fbmwater";
 import { VoronoiShader } from "../../../shaders/voronoi/voronoi";
 
