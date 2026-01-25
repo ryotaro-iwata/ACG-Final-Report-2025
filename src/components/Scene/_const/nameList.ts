@@ -41,4 +41,5 @@ export const namelist = [
 	"tv",
 	"wall1",
 	"wall2",
+	"zine",
 ];
