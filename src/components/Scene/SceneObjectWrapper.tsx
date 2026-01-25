@@ -16,7 +16,7 @@ export const SceneObjectWrapper = () => {
   const vaporRules = useVaporRules();
   const handWriteRules = useHandWriteRules();
 
-  let rules;
+  let rules: any[];
   switch (themeMode) {
     case "Vaporwave":
       rules = vaporRules;
@@ -33,11 +33,12 @@ export const SceneObjectWrapper = () => {
     <>
       <Suspense>
         <SceneObject
-          modelPath="/models/room.gltf"
+          // modelPath="/models/room.gltf"
+          modelPath={`${import.meta.env.BASE_URL}models/room.gltf`}
           rules={rules}
           object={{
-            position: [0, 0, 0],
-            rotation: [0, 0, 0],
+            position: [-8, -12.5, -28],
+            rotation: [0, 1.5, 0],
             scale: 1,
           }}
         />

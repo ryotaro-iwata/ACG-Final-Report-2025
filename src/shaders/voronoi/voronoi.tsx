@@ -1,5 +1,5 @@
 // shaders/somethingShader.ts
-import { Color, Vector3 } from "three";
+import { Vector3 } from "three";
 import vertexShader from "./voronoi.vs?raw";
 import fragmentShader from "./voronoi.fs?raw";
 import type { ShaderDefinition } from "../../types/shader";
@@ -19,10 +19,10 @@ export type VoronoiUniforms = {
 export const VoronoiShader: ShaderDefinition<VoronoiUniforms> = {
   // 頂点シェーダーのコード
   vertexShader,
-  
+
   // フラグメントシェーダーのコード
   fragmentShader,
-  
+
   // デフォルト値
   defaultUniforms: {
     lightDirection: [1, 1, 1],
@@ -33,7 +33,7 @@ export const VoronoiShader: ShaderDefinition<VoronoiUniforms> = {
     voronoiScale: 40.0,//マスの多さ
     voronoiIntensity: 0.4,//ボロノイの色をどれsだけ反映させるか
   },
-  
+
   // uniform値をThree.jsのuniform形式に変換する関数
   createUniforms: (values) => ({
     lightDirection: {
@@ -43,8 +43,8 @@ export const VoronoiShader: ShaderDefinition<VoronoiUniforms> = {
         values.lightDirection?.[2] ?? 1
       ).normalize(),
     },
-    lightIntensity:{
-        value: values.lightIntensity ?? 1.0
+    lightIntensity: {
+      value: values.lightIntensity ?? 1.0
     },
     rimColor: {
       value: new Vector3(
@@ -53,16 +53,16 @@ export const VoronoiShader: ShaderDefinition<VoronoiUniforms> = {
         values.rimColor?.[2] ?? 0.0
       )
     },
-    rimPower: { 
-      value: values.rimPower ?? 1.5 
+    rimPower: {
+      value: values.rimPower ?? 1.5
     },
-    rimIntensity: { 
-      value: values.rimIntensity ?? 0.3 
+    rimIntensity: {
+      value: values.rimIntensity ?? 0.3
     },
-    voronoiScale: { 
+    voronoiScale: {
       value: values.voronoiScale ?? 10.0
     },
-    voronoiIntensity: { 
+    voronoiIntensity: {
       value: values.voronoiIntensity ?? 0.4
     },
   }),
